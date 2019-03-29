@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Threading;
 using Confluent.Kafka;
-
+using System.IO;
 class Program
 {
     public static void Main(string[] args)
@@ -35,7 +36,16 @@ class Program
                     try
                     {
                         var cr = c.Consume(cts.Token);
-                        Console.WriteLine($"Consumed message '{cr.Value}' at: '{cr.TopicPartitionOffset}'.");
+                        if(cr.Value == "start") {
+                            Console.WriteLine("starting cpp process");
+                            Process process = new Process();
+                            // Configure the process using the StartInfo properties.
+                            process.StartInfo.FileName = Path.GetFullPath("../controlled-app/hello");
+                            process.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
+                            process.Start();
+                            process.WaitForExit();
+                        }
+                        // Console.WriteLine($"Consumed message '{cr.Value}' at: '{cr.TopicPartitionOffset}'.");
                     }
                     catch (ConsumeException e)
                     {
