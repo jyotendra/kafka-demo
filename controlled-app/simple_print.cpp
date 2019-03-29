@@ -9,5 +9,6 @@ int main()
         cout << "Hello, World!" << i << "\n";
         i++;
     }
+    cout << "Exiting...";
     return 0;
 }

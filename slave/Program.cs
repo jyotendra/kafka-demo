@@ -3,6 +3,8 @@ using System.Diagnostics;
 using System.Threading;
 using Confluent.Kafka;
 using System.IO;
+using System.Collections.Generic;
+
 class Program
 {
     public static void Main(string[] args)
@@ -31,19 +33,29 @@ class Program
 
             try
             {
+                int? processId = null;                        
                 while (true)
                 {
                     try
                     {
                         var cr = c.Consume(cts.Token);
                         if(cr.Value == "start") {
-                            Console.WriteLine("starting cpp process");
                             Process process = new Process();
+                            process.StartInfo.FileName = Path.GetFullPath("../controlled-app/hello"); 
+                            process.StartInfo.WindowStyle = ProcessWindowStyle.Hidden;                           
                             // Configure the process using the StartInfo properties.
-                            process.StartInfo.FileName = Path.GetFullPath("../controlled-app/hello");
-                            process.StartInfo.WindowStyle = ProcessWindowStyle.Maximized;
                             process.Start();
-                            process.WaitForExit();
+                            processId = process.Id;
+                            Console.WriteLine("Entered start");
+
+                        }
+
+                        if(cr.Value == "stop") {
+                            Console.WriteLine("Entered stop");
+                            if(processId != null){
+                                Process.GetProcessById((int)processId).Kill();
+                                Console.WriteLine("controlled-app exited");
+                            }
                         }
                         // Console.WriteLine($"Consumed message '{cr.Value}' at: '{cr.TopicPartitionOffset}'.");
                     }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Threading;
 using Confluent.Kafka;
 
 class Program
@@ -16,9 +17,13 @@ class Program
         {
             // initiate cpp process
             p.BeginProduce("my-topic", new Message<Null, string> { Value = "start" }, handler);
-
             // wait for up to 10 seconds for any inflight messages to be delivered.
             p.Flush(TimeSpan.FromSeconds(10));
+
+            Thread.Sleep(3000);
+            p.BeginProduce("my-topic", new Message<Null, string> { Value = "stop" }, handler);
+
+
         }
     }
 }
