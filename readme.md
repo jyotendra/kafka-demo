@@ -10,7 +10,7 @@ This should bring zookeper and kafka services up.
 
 If docker-compose starts Kafka correctly, you will get to see running logs as shown below:
 
-!(kafka_logs)[docs/images/kafka_logs.png]
+![kafka_logs](docs/images/kafka_logs.png)
 
 
 Now go to master and slave folders and issue ``` dotnet run ``` to run initial demo. Of course you need to install "dotnet core" on your system. You should be able to see messages being dispathced by master and being received by slave through kafka.
@@ -18,4 +18,4 @@ Now go to master and slave folders and issue ``` dotnet run ``` to run initial d
 * On receiving "start" message from "master" - "slave" will invoke the "hello world" program in C++, which will print "Hello World" in an infinite loop.
 * On receiving "stop" message from "master" - "slave" will end the process.
 
-!(control-message)[docs/images/control-message.png]
+![control-message](docs/images/control-message.png)
